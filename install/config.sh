@@ -2,7 +2,7 @@
 set -euo pipefail
 
 REPO_URL="git@github.com:michaldziurowski/dotfiles.git"
-DEST_DIR="$HOME/.config/dotfiles"
+DEST_DIR="$HOME/devel/dotfiles"
 
 # Targets in your HOME
 NVIM_HOME="$HOME/.config/nvim"
@@ -11,20 +11,14 @@ HYPR_BINDINGS_FILE="$HYPR_HOME_DIR/bindings.conf"
 HYPR_MONITORS_FILE="$HYPR_HOME_DIR/monitors.conf"
 HYPR_INPUT_FILE="$HYPR_HOME_DIR/input.conf"
 
-echo "==> Cloning (no checkout) to $DEST_DIR ..."
+echo "==> Cloning to $DEST_DIR ..."
 if [ -d "$DEST_DIR/.git" ]; then
-  echo "    Repo already exists at $DEST_DIR, fetching latest refs..."
-  git -C "$DEST_DIR" fetch --all --prune
+  echo "    Repo already exists at $DEST_DIR, pulling latest changes..."
+  git -C "$DEST_DIR" pull
 else
-  git clone --no-checkout "$REPO_URL" "$DEST_DIR"
+  mkdir -p "$(dirname "$DEST_DIR")"
+  git clone "$REPO_URL" "$DEST_DIR"
 fi
-
-echo "==> Configuring sparse-checkout for .config/nvim and .config/hypr ..."
-cd "$DEST_DIR"
-git sparse-checkout init --cone
-git sparse-checkout set config/nvim config/hypr
-
-git checkout
 
 # Create symlink for ~/.config/nvim -> ~/.config/dotfiles/.config/nvim
 echo "==> Replacing $NVIM_HOME with symlink to repo ..."
@@ -51,7 +45,7 @@ rm -f "$HYPR_INPUT_FILE"
 ln -s "$DEST_DIR/config/hypr/input.conf" "$HYPR_INPUT_FILE"
 
 echo "✅ Done!"
-echo "   - $NVIM_HOME -> $DEST_DIR/.config/nvim"
+echo "   - $NVIM_HOME -> $DEST_DIR/config/nvim"
 echo "   - $HYPR_BINDINGS_FILE -> $DEST_DIR/config/hypr/bindings.conf"
 echo "   - $HYPR_MONITORS_FILE -> $DEST_DIR/config/hypr/monitors.conf"
 echo "   - $HYPR_INPUT_FILE -> $DEST_DIR/config/hypr/input.conf"
