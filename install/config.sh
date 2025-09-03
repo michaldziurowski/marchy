@@ -10,14 +10,15 @@ HYPR_HOME_DIR="$HOME/.config/hypr"
 HYPR_BINDINGS_FILE="$HYPR_HOME_DIR/bindings.conf"
 HYPR_MONITORS_FILE="$HYPR_HOME_DIR/monitors.conf"
 HYPR_INPUT_FILE="$HYPR_HOME_DIR/input.conf"
+ALACRITTY_FILE="$HOME/.config/alacritty/alacritty.toml"
 
 echo "==> Cloning to $DEST_DIR ..."
 if [ -d "$DEST_DIR/.git" ]; then
-  echo "    Repo already exists at $DEST_DIR, pulling latest changes..."
-  git -C "$DEST_DIR" pull
+	echo "    Repo already exists at $DEST_DIR, pulling latest changes..."
+	git -C "$DEST_DIR" pull
 else
-  mkdir -p "$(dirname "$DEST_DIR")"
-  git clone "$REPO_URL" "$DEST_DIR"
+	mkdir -p "$(dirname "$DEST_DIR")"
+	git clone "$REPO_URL" "$DEST_DIR"
 fi
 
 # Create symlink for ~/.config/nvim -> ~/.config/dotfiles/.config/nvim
@@ -38,14 +39,27 @@ echo "==> Replacing $HYPR_MONITORS_FILE with symlink to repo file ..."
 rm -f "$HYPR_MONITORS_FILE"
 ln -s "$DEST_DIR/config/hypr/monitors.conf" "$HYPR_MONITORS_FILE"
 
-
 # Replace ~/.config/hypr/input.conf with symlink to repo file
 echo "==> Replacing $HYPR_INPUT_FILE with symlink to repo file ..."
 rm -f "$HYPR_INPUT_FILE"
 ln -s "$DEST_DIR/config/hypr/input.conf" "$HYPR_INPUT_FILE"
+
+# Replace ~/.config/alacritty/alacritty.toml with symlink to repo file
+echo "==> Replacing $ALACRITTY_FILE with symlink to repo file ..."
+rm -f "$ALACRITTY_FILE"
+ln -s "$DEST_DIR/config/alacritty/alacritty.toml" "$ALACRITTY_FILE"
+
+echo "==> Adding ssh-agent to hyprland.conf"
+cat >>~/.config/hypr/hyprland.conf <<'EOF'
+exec-once = /usr/bin/ssh-agent -a $XDG_RUNTIME_DIR/ssh-agent.socket -D
+env = SSH_AUTH_SOCK,$XDG_RUNTIME_DIR/ssh-agent.socket
+exec-once = ssh-add ~/.ssh/id_rsa
+EOF
 
 echo "✅ Done!"
 echo "   - $NVIM_HOME -> $DEST_DIR/config/nvim"
 echo "   - $HYPR_BINDINGS_FILE -> $DEST_DIR/config/hypr/bindings.conf"
 echo "   - $HYPR_MONITORS_FILE -> $DEST_DIR/config/hypr/monitors.conf"
 echo "   - $HYPR_INPUT_FILE -> $DEST_DIR/config/hypr/input.conf"
+echo "   - $ALACRITTY_FILE -> $DEST_DIR/config/alacritty/alacritty.toml"
+echo "   - Added ssh-agent to hyprland.conf"
