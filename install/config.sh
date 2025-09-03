@@ -49,17 +49,9 @@ echo "==> Replacing $ALACRITTY_FILE with symlink to repo file ..."
 rm -f "$ALACRITTY_FILE"
 ln -s "$DEST_DIR/config/alacritty/alacritty.toml" "$ALACRITTY_FILE"
 
-echo "==> Adding ssh-agent to hyprland.conf"
-cat >>~/.config/hypr/hyprland.conf <<'EOF'
-exec-once = /usr/bin/ssh-agent -a $XDG_RUNTIME_DIR/ssh-agent.socket -D
-env = SSH_AUTH_SOCK,$XDG_RUNTIME_DIR/ssh-agent.socket
-exec-once = ssh-add ~/.ssh/id_rsa
-EOF
-
 echo "✅ Done!"
 echo "   - $NVIM_HOME -> $DEST_DIR/config/nvim"
 echo "   - $HYPR_BINDINGS_FILE -> $DEST_DIR/config/hypr/bindings.conf"
 echo "   - $HYPR_MONITORS_FILE -> $DEST_DIR/config/hypr/monitors.conf"
 echo "   - $HYPR_INPUT_FILE -> $DEST_DIR/config/hypr/input.conf"
 echo "   - $ALACRITTY_FILE -> $DEST_DIR/config/alacritty/alacritty.toml"
-echo "   - Added ssh-agent to hyprland.conf"
