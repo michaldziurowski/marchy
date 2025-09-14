@@ -12,6 +12,7 @@ HYPR_MONITORS_FILE="$HYPR_HOME_DIR/monitors.conf"
 HYPR_INPUT_FILE="$HYPR_HOME_DIR/input.conf"
 ALACRITTY_FILE="$HOME/.config/alacritty/alacritty.toml"
 STARSHIP_FILE="$HOME/.config/starship.toml"
+DIRENV_HOME="$HOME/.config/direnv"
 
 echo "==> Cloning to $DEST_DIR ..."
 if [ -d "$DEST_DIR/.git" ]; then
@@ -48,6 +49,10 @@ ln -sfn "$DEST_DIR/config/alacritty/alacritty.toml" "$ALACRITTY_FILE"
 # Replace ~/.config/starsihp.toml with symlink to repo file
 echo "==> Replacing $STARSHIP_FILE with symlink to repo file ..."
 ln -sfn "$DEST_DIR/config/starship.toml" "$STARSHIP_FILE"
+
+# Replace ~/.config/direnv/direnv.toml with symlink to repo file
+echo "==> Replacing $DIRENV_HOME with symlink to repo file ..."
+ln -sfn "$DEST_DIR/config/direnv" "$DIRENV_HOME"
 
 echo "✅ Done!"
 echo "   - $NVIM_HOME -> $DEST_DIR/config/nvim"
