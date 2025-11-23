@@ -4,7 +4,7 @@ set -euo pipefail
 INTERNAL="eDP-1"
 
 enable_internal() {
-  hyprctl keyword monitor "$INTERNAL, preferred, auto, 1.2" >/dev/null
+  hyprctl keyword monitor "$INTERNAL, preferred, auto, 1" >/dev/null
 }
 
 disable_internal() {
