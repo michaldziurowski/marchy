@@ -17,6 +17,7 @@ find tools/ -type f -exec chmod +x {} \;
 ./scripts/tailscale.sh
 ./scripts/devel.sh
 ./scripts/aws.sh
+./scripts/yazi.sh
 ./scripts/theme.sh
 ./scripts/extras/awsvpnclient.sh
 ./scripts/extras/slack.sh
